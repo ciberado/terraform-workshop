@@ -25,6 +25,12 @@ cat variables.tf
 cat test.tfvars
 ```
 
+* Look what is going to happen
+
+```
+terraform plan
+```
+
 * Beam me up, Scotty!
 
 ```
