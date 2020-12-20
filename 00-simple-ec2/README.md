@@ -22,13 +22,13 @@ terraform validate
 
 ```
 cat variables.tf
-cat pokemon.test.tfvars
+cat test.tfvars
 ```
 
 * Beam me up, Scotty!
 
 ```
-terraform apply -var-file=pokemon.test.tfvars
+terraform apply -var-file=test.tfvars
 ```
 
 * Check the created resources
