@@ -1,25 +1,23 @@
 provider "aws" {
-  region  = "${local.region}"
+  region  = "${var.region}"
 }
 
 locals {
-  owner = "demoowner"
-  name   = "demovpc"
-  region = "eu-west-1"
+  name   = "${var.prefix}_VPC"
   addr_range_prefix = "10.0"
 
   tags = {
-    Owner = local.owner
+    Owner = var.owner
   }  
 }
 
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "pokemon_vpc"
+  name = local.name
   cidr = "${local.addr_range_prefix}.0.0/16"
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   private_subnets = ["${local.addr_range_prefix}.1.0/24", 
                      "${local.addr_range_prefix}.2.0/24", 
                      "${local.addr_range_prefix}.3.0/24"]
