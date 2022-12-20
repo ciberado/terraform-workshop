@@ -1,5 +1,4 @@
 provider "aws" {
-  profile = "default"
   region  = "${local.region}"
 }
 
@@ -7,7 +6,7 @@ locals {
   owner = "demoowner"
   name   = "demovpc"
   region = "eu-west-1"
-  addr_range_prefix = "${local.addr_range_prefix}"
+  addr_range_prefix = "10.0"
 
   tags = {
     Owner = local.owner
@@ -36,9 +35,7 @@ module "vpc" {
 
   enable_vpn_gateway = false
 
-  create_database_subnet_group = true
-
-  enable_s3_endpoint = true
+  create_database_subnet_group = true  
 
   enable_flow_log                      = true
   create_flow_log_cloudwatch_log_group = true
