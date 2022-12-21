@@ -7,7 +7,7 @@ locals {
   addr_range_prefix = "10.0"
 
   vpc_tags = merge({
-    layer : "network fabric"
+    Layer : "network fabric"
   }, var.tags)
 }
 

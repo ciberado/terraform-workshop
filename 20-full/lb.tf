@@ -1,6 +1,6 @@
 locals {
   lb_tags = merge({
-    layer : "decoupling"
+    Layer : "decoupling"
   }, var.tags)
 }
 
