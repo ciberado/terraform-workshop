@@ -1,7 +1,3 @@
-provider "aws" {
-  region  = "${var.region}"
-}
-
 locals {
   name   = "${var.prefix}_VPC"
   addr_range_prefix = "10.0"
