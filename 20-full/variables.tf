@@ -10,7 +10,6 @@ variable "prefix" {
   default = "demo"
 }
 
-
 variable "vpc_addr_prefix" {
   description = "16 first bits of the VPC prefix, like 10.0"
   type = string
@@ -24,3 +23,8 @@ variable "tags" {
   }
 }
 
+variable "app_instance_type" {
+  description = "Instance type for the compute layer."
+  type = string
+  default = "t3.micro"
+}
