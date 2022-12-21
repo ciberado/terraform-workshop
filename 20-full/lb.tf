@@ -11,11 +11,12 @@ module "lb_sg" {
   egress_rules        = ["all-all"]
 }
 
-/*
+resource "random_uuid" "bucket_uuid" {}
+
 module "s3_bucket_for_logs" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
-  bucket = "my-s3-bucket-for-logs"
+  bucket = "${var.prefix}-app-alb-logs-${random_uuid.bucket_uuid.result}"
   acl    = "log-delivery-write"
 
   # Allow deletion of non-empty bucket
@@ -24,7 +25,7 @@ module "s3_bucket_for_logs" {
   attach_elb_log_delivery_policy = true
   attach_lb_log_delivery_policy  = true
 }
-*/
+
 
 module "app_alb" {
   source  = "terraform-aws-modules/alb/aws"
@@ -38,11 +39,11 @@ module "app_alb" {
   subnets            = module.vpc.public_subnets
   security_groups    = [module.lb_sg.security_group_id]
 
-/*
+
   access_logs = {
-    bucket = "${var.prefix}_ALB_logs"
+    bucket = module.s3_bucket_for_logs.s3_bucket_id
   }
-*/
+
 
   tags = {
     
