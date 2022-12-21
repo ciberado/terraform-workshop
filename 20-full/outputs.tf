@@ -13,3 +13,15 @@ output "vpc_flow_log_id" {
   value       = module.vpc.vpc_flow_log_id
 }
 
+output "app_alb_fqdn" {
+  description = "The DNS name of the load balancer for the application"
+  value = module.app_alb.lb_dns_name
+}
+
+output "ubuntu_ami_description" {
+  value = data.aws_ami.ubuntu.description
+}
+
+output "ubuntu_ami_id" {
+  value = data.aws_ami.ubuntu.id
+}
