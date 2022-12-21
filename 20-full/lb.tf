@@ -52,5 +52,19 @@ module "app_alb" {
   }
 
 
+  http_tcp_listeners = [
+    {
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "fixed-response"
+      fixed_response = {
+        content_type = "text/plain"
+        message_body = "Everything is totally fine."
+        status_code  = "200"
+      }
+    }
+  ]
+
+
   tags = local.lb_tags
 }
