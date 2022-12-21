@@ -10,15 +10,17 @@ variable "prefix" {
   default = "demo"
 }
 
-variable "owner" {
-  description = "Owner of the infrastructure"
-  type = string
-  default = "Unknown"
-}
-
 
 variable "vpc_addr_prefix" {
   description = "16 first bits of the VPC prefix, like 10.0"
   type = string
   default = "Unknown"
 }
+
+variable "tags" {
+  type = map
+  default =  {
+    Owner = "Unknown" /* Owner of the infrastructure */
+  }
+}
+

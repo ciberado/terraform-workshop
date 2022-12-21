@@ -6,9 +6,9 @@ locals {
   name   = "${var.prefix}_VPC"
   addr_range_prefix = "10.0"
 
-  tags = {
-    Owner = var.owner
-  }  
+  vpc_tags = merge({
+    layer : "network fabric"
+  }, var.tags)
 }
 
 module "vpc" {
@@ -40,5 +40,5 @@ module "vpc" {
   create_flow_log_cloudwatch_iam_role  = true
   flow_log_max_aggregation_interval    = 60
 
-  tags = local.tags
+  tags = local.vpc_tags
 }

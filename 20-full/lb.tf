@@ -1,3 +1,9 @@
+locals {
+  lb_tags = merge({
+    layer : "decoupling"
+  }, var.tags)
+}
+
 module "lb_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
@@ -24,8 +30,9 @@ module "s3_bucket_for_logs" {
 
   attach_elb_log_delivery_policy = true
   attach_lb_log_delivery_policy  = true
-}
 
+  tags = local.lb_tags
+}
 
 module "app_alb" {
   source  = "terraform-aws-modules/alb/aws"
@@ -45,7 +52,5 @@ module "app_alb" {
   }
 
 
-  tags = {
-    
-  }
+  tags = local.lb_tags
 }
