@@ -1,3 +1,9 @@
+locals {
+  asg_tags = merge({
+    Layer : "computing"
+  }, var.tags)
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
   owners      = ["099720109477"] /* Ubuntu */
@@ -27,14 +33,53 @@ module "app_sg" {
   egress_rules        = ["all-all"]
 }
 
-/*
-resource "aws_autoscaling_group" "terramino" {
-  name                 = "terramino"
-  min_size             = 1
-  max_size             = 3
-  desired_capacity     = 1
-  launch_configuration = aws_launch_configuration.terramino.name
-  vpc_zone_identifier  = module.vpc.public_subnets
+resource "aws_launch_template" "app_launch_template" {
+  name = "${var.prefix}_launch_template"
+  
+  block_device_mappings {
+    device_name = "/dev/sda1"
 
+    ebs {
+      volume_size = 8
+    }
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  ebs_optimized = true
+
+  iam_instance_profile {
+    name = "test"
+  }
+
+  image_id = data.aws_ami.ubuntu.id
+
+  instance_initiated_shutdown_behavior = "terminate"
+
+  instance_market_options {
+    market_type = "spot"
+  }
+
+  instance_type = "t3.micro"
+
+  monitoring {
+    enabled = true
+  }
+
+  network_interfaces {
+    associate_public_ip_address = false
+  }
+
+  vpc_security_group_ids = [module.app_sg.security_group_id]
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = local.asg_tags
+  }
+
+  user_data = filebase64("${path.module}/user-data.sh")
 }
-*/
+
