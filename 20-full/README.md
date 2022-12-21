@@ -11,3 +11,12 @@ terraform apply
 ```
 terraform destroy
 ```
+
+
+
+
+```
+curl -sLO https://raw.githubusercontent.com/antonbabenko/terraform-cost-estimation/master/terraform.jq -O ../
+
+terraform state pull | jq -cf ../terraform.jq | curl -s -X POST -H "Content-Type: application/json" -d @- https://cost.modules.tf/
+```
