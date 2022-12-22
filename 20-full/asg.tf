@@ -55,7 +55,7 @@ resource "aws_lb_listener_rule" "app_routing" {
   priority     = 99
 
   action {
-    type             = "forward"
+    type = "forward"
     target_group_arn = aws_lb_target_group.app_target_group.arn
   }
 
@@ -66,7 +66,6 @@ resource "aws_lb_listener_rule" "app_routing" {
   }
 }
 
-
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
 
@@ -76,7 +75,7 @@ module "asg" {
   max_size = 3
   desired_capacity = 1
 
-  health_check_type = "EC2"
+  health_check_type = "ELB"
   vpc_zone_identifier = module.vpc.private_subnets
 
   target_group_arns = [aws_lb_target_group.app_target_group.arn] 
@@ -92,7 +91,6 @@ module "asg" {
     triggers = ["tag"]
   }
 
-  # Launch template
   launch_template_name = "${var.prefix}_launch_template"
   launch_template_description = "Launch template for ${var.prefix}"
   update_default_version = true
@@ -117,7 +115,6 @@ module "asg" {
 
   block_device_mappings = [
     {
-      # Root volume
       device_name = "/dev/xvda"
       no_device = 0
       ebs = {
@@ -140,7 +137,6 @@ module "asg" {
   instance_market_options = {
     market_type = "spot"
   }
-
 
   network_interfaces = [
     {
@@ -169,4 +165,20 @@ module "asg" {
   user_data = filebase64("${path.module}/user-data.sh")
 
   tags = local.asg_tags
+}
+
+resource "aws_autoscaling_policy" "app_asg_cpu_autoscaling" {
+  autoscaling_group_name = module.asg.autoscaling_group_name
+  name = "${var.prefix}AppASGAutoscalingPolicy"
+  policy_type = "TargetTrackingScaling"
+  estimated_instance_warmup = 60
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      # ALBTargetGroupRequestCount can also be used depending of the scenario
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 30.0
+  }
 }
