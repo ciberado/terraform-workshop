@@ -50,6 +50,22 @@ resource "aws_lb_target_group" "app_target_group" {
   }
 }
 
+resource "aws_lb_listener_rule" "app_routing" {
+  listener_arn = module.app_alb.http_tcp_listener_arns[0]
+  priority     = 99
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_target_group.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/*"]
+    }
+  }
+}
+
 
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
