@@ -34,6 +34,7 @@ module "s3_bucket_for_logs" {
   tags = local.lb_tags
 }
 
+
 module "app_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
@@ -46,11 +47,14 @@ module "app_alb" {
   subnets            = module.vpc.public_subnets
   security_groups    = [module.lb_sg.security_group_id]
 
+  /*
+  Adding the logs generates an error during the first deployment. Commenting it until
+  further investigation.
 
   access_logs = {
     bucket = module.s3_bucket_for_logs.s3_bucket_id
   }
-
+  */
 
   http_tcp_listeners = [
     {
