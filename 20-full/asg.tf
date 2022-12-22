@@ -33,6 +33,23 @@ module "app_sg" {
   egress_rules = ["all-all"]
 }
 
+resource "aws_lb_target_group" "app_target_group" {
+  name = "${var.prefix}AppTargetGroup"
+  port     = 8080
+  protocol = "HTTP"
+  vpc_id   = module.vpc.vpc_id
+  load_balancing_algorithm_type = "least_outstanding_requests"
+
+  health_check {
+    enabled = true
+    healthy_threshold = 2
+    unhealthy_threshold = 3
+    interval = 20
+    path = "/health"
+    timeout = 10
+  }
+}
+
 
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
@@ -45,6 +62,8 @@ module "asg" {
 
   health_check_type = "EC2"
   vpc_zone_identifier = module.vpc.private_subnets
+
+  target_group_arns = [aws_lb_target_group.app_target_group.arn] 
 
   instance_refresh = {
     strategy = "Rolling"
