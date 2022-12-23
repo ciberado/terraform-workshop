@@ -23,5 +23,15 @@ output "ubuntu_ami_description" {
 }
 
 output "ubuntu_ami_id" {
+  description = "AMI used for deploying the servers."
   value = data.aws_ami.ubuntu.id
+}
+
+output "rds_endpoint" {
+  description = "Database endpoint"
+  value = module.db.db_instance_endpoint
+}
+
+output "rds_pass_ssm_path" {
+  value = aws_ssm_parameter.rdssecret.name
 }

@@ -91,3 +91,12 @@ module "db" {
   
   db_parameter_group_tags = local.rds_tags
 }
+
+resource "aws_ssm_parameter" "rdssecret" {
+  name = "/${var.tags.Environment}/databases/${var.prefix}/password/master"
+  description = "Initial password for the database"
+  type = "SecureString"
+  value = module.db.db_instance_password
+  overwrite = true
+  tags = local.rds_tags
+}

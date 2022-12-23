@@ -19,6 +19,7 @@ variable "vpc_addr_prefix" {
 variable "tags" {
   type = map
   default =  {
+    Environment = "development"
     Owner = "Unknown" /* Owner of the infrastructure */
   }
 }
