@@ -69,3 +69,21 @@ terraform apply -var-file="prod.tfvars"
 ```bash
 terraform destroy
 ```
+
+## S3 Backends
+
+To store the state of the workspaces on a remote bucket, the configuration in
+[version.tf](versions.tf) must be updated like this:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = <name of the bucket>
+    key = "path/to/my/key"
+    region = "eu-west-1"
+    dynamodb_table = "<name of the dynamodb table>"
+  }
+}
+```
+
+Both the bucket and the DynamoDB table must to have been created previously.
