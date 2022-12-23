@@ -13,7 +13,7 @@ variable "prefix" {
 variable "vpc_addr_prefix" {
   description = "16 first bits of the VPC prefix, like 10.0"
   type = string
-  default = "Unknown"
+  default = "10.0"
 }
 
 variable "tags" {

@@ -1,6 +1,6 @@
 locals {
   name   = "${var.prefix}_VPC"
-  addr_range_prefix = "10.0"
+  addr_range_prefix = var.vpc_addr_prefix
 
   vpc_tags = merge({
     Layer : "network fabric"
