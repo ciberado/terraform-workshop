@@ -28,3 +28,16 @@ variable "app_instance_type" {
   type = string
   default = "t3.micro"
 }
+
+variable "rds_instance_type" {
+  description = "Instance type for the database layer."
+  type = string
+  default = "db.t4g.micro"
+}
+
+variable "rds_multiaz" {
+  description = "Standby instance creation"
+  type = bool
+  default = false
+}
+

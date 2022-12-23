@@ -29,8 +29,6 @@ module "vpc" {
 
   enable_vpn_gateway = false
 
-  create_database_subnet_group = true  
-
   enable_flow_log                      = true
   create_flow_log_cloudwatch_log_group = true
   create_flow_log_cloudwatch_iam_role  = true
