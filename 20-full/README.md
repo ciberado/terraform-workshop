@@ -1,7 +1,7 @@
 # Complete stack demo
 
 This demo deploys an application using the classic ALB + ASG + RDS stack, properly configured.
-It is designed to facilitate several Terraform features, like:
+It is designed to facilitate learning about several Terraform features, like:
 
 * The use of resources and modules
 * Applying input and output parameters
