@@ -16,6 +16,8 @@ provider "aws" {
   default_tags {
     tags = {
       Project = "SimpleArchFullExample"
+      Environment : terraform.workspace
+      Creation : timestamp()
     }
   }  
 }

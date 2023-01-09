@@ -1,7 +1,5 @@
 locals {
   lb_tags = merge({
-    Environment : terraform.workspace
-    Creation : timestamp()
     Layer : "decoupling"
   }, var.tags)
 }

@@ -1,7 +1,5 @@
 locals {
   asg_tags = merge({
-    Environment : terraform.workspace
-    Creation : timestamp()
     Layer : "computing"
   }, var.tags)
 }
