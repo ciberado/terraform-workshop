@@ -3,6 +3,8 @@ locals {
   addr_range_prefix = var.vpc_addr_prefix
 
   vpc_tags = merge({
+    Environment : terraform.workspace
+    Creation : timestamp()
     Layer : "network fabric"
   }, var.tags)
 }

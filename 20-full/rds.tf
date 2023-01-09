@@ -1,5 +1,7 @@
 locals {
   rds_tags = merge({
+    Environment : terraform.workspace
+    Creation : timestamp()
     Layer : "database"
   }, var.tags)
 }
