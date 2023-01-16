@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "${var.region}"
+  region = var.region
 
 
   default_tags {
@@ -19,5 +19,5 @@ provider "aws" {
       Environment : terraform.workspace
       Creation : timestamp()
     }
-  }  
+  }
 }

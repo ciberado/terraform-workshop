@@ -15,7 +15,7 @@ output "vpc_flow_log_id" {
 
 output "app_alb_fqdn" {
   description = "The DNS name of the load balancer for the application"
-  value = module.app_alb.lb_dns_name
+  value       = module.app_alb.lb_dns_name
 }
 
 output "ubuntu_ami_description" {
@@ -24,12 +24,12 @@ output "ubuntu_ami_description" {
 
 output "ubuntu_ami_id" {
   description = "AMI used for deploying the servers."
-  value = data.aws_ami.ubuntu.id
+  value       = data.aws_ami.ubuntu.id
 }
 
 output "rds_endpoint" {
   description = "Database endpoint"
-  value = module.db.db_instance_endpoint
+  value       = module.db.db_instance_endpoint
 }
 
 output "rds_pass_ssm_path" {

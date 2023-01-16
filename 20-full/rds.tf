@@ -5,12 +5,12 @@ locals {
 }
 
 module "rds_postgres_sg" {
-  source = "terraform-aws-modules/security-group/aws"
+  source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
-  name = "${var.prefix}_rds_postgres_sg"
+  name        = "${var.prefix}_rds_postgres_sg"
   description = "Database security group for postgresql"
-  vpc_id = module.vpc.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   computed_ingress_with_source_security_group_id = [
     {
@@ -35,7 +35,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 }
 
 module "db" {
-  source  = "terraform-aws-modules/rds/aws"
+  source = "terraform-aws-modules/rds/aws"
 
   identifier = "${lower(var.prefix)}db"
 
@@ -73,7 +73,7 @@ module "db" {
   monitoring_role_use_name_prefix       = true
   monitoring_role_description           = "Description for monitoring role"
 
-  
+
   parameters = [
     {
       name  = "autovacuum"
@@ -88,15 +88,15 @@ module "db" {
   tags = local.rds_tags
 
   db_option_group_tags = local.rds_tags
-  
+
   db_parameter_group_tags = local.rds_tags
 }
 
 resource "aws_ssm_parameter" "rdssecret" {
-  name = "/${var.tags.Environment}/databases/${var.prefix}/password/master"
+  name        = "/${var.tags.Environment}/databases/${var.prefix}/password/master"
   description = "Initial password for the database"
-  type = "SecureString"
-  value = module.db.db_instance_password
-  overwrite = true
-  tags = local.rds_tags
+  type        = "SecureString"
+  value       = module.db.db_instance_password
+  overwrite   = true
+  tags        = local.rds_tags
 }
