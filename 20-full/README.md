@@ -7,83 +7,100 @@ It is designed to facilitate learning about several Terraform features, like:
 * Applying input and output parameters
 * Overwriting input parameters for production using a file
 * Properly chaining Security Groups to ensure traffic segregation
-* Activating VPC flow logs
-* The configuration of AMI Roles for computation
 * Finding the current LTS version of Ubuntu AMI
 * Applying the user data from a separate file
 * Storing the (random) database password in a parameter store secure string
 
-## Simple usage
+## Preparation
 
-* Create a workspace
+*Note: CloudShell is not the best environment to run critical processes, and it is even worst if you don't
+keep your Terraform backend secured on S3. In case you get any problem executing the commands
 
-```bash
-terraform workspace new development
-terraform workspace select development # Not actually needed
-```
 
-* Validate, plan and apply the changes
 
-```bash
-terraform validate
-terraform plan
-terraform apply
-```
+* Open [CloudShell](https://us-east-1.console.aws.amazon.com/cloudshell/home?region=us-east-1) to get a Linux prompt
 
-* Calculate the cost of the main resources in the solution
+* Install the `terraform` command
 
 ```bash
-terraform state pull | \
-  jq -cf ./clean-sensible-data.jq | \
-  curl -s -X POST \
-    -H "Content-Type: application/json" \
-    -d @- https://cost.modules.tf/ \
-; echo
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
+terraform version
 ```
 
-* Delete everything once finished
+* Get the source code of the workshop and move the prompt to the correct directory
 
 ```bash
-terraform destroy
+git clone https://github.com/ciberado/terraform-workshop.git
+cd terraform-workshop/20-full/src/
 ```
 
-## Production environment
+## Deployment
 
-* Create a workspace
+* Download the dependencies
 
 ```bash
-terraform workspace new production
-terraform workspace select production # Not actually needed
+terraform init
 ```
 
-* Validate, plan and apply the changes
+* Validate the code and plan the changes (take a close look to the proposed actions)
 
 ```bash
 terraform validate
-terraform plan
-terraform apply -var-file="prod.tfvars"
+terraform plan -var-file prod.tfvars
 ```
 
-* Delete everything once finished
+## Security checking: Checkov
+
+* Install [Checkov](https://www.checkov.io/), one of the best Infrastructure as Code audit tool
 
 ```bash
-terraform destroy
+python3 -m pip install checkov
 ```
 
-## S3 Backends
+* Scan for configuration bad practices
 
-To store the state of the workspaces on a remote bucket, the configuration in
-[version.tf](versions.tf) must be updated like this:
-
-```hcl
-terraform {
-  backend "s3" {
-    bucket = <name of the bucket>
-    key = "path/to/my/key"
-    region = "eu-west-1"
-    dynamodb_table = "<name of the dynamodb table>"
-  }
-}
+```bash
+checkov -d .
 ```
 
-Both the bucket and the DynamoDB table must to have been created previously.
+## Security checking: AquaSecurity
+
+* Install the [AquaSecurity](https://github.com/aquasecurity/tfsec) tool
+
+```bash
+curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+```
+
+* Run the checking!
+
+```bash
+tfsec --tfvars-file prod.tfvars .
+```
+
+## Infrastructure deployment
+
+* Launch the the infrastructure. It will take around 15 minutes to set it up everything properly
+
+```bash
+terraform apply -var-file=prod.tfvars -auto-approve
+```
+
+* Get the address of the load balancer and open it with your browser
+
+```bash
+echo http://$(terraform output -raw app_alb_fqdn); echo
+```
+
+*Note: even if the infrastructure has been completely deploye, it will still require a few
+minutes to be available, as the application installation process is not optimized.*
+
+## Cleanup
+
+* Delete the infrastructure
+
+```bash
+terraform apply -destroy -var-file=prod.tfvars -auto-approve
+```
