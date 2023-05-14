@@ -29,10 +29,14 @@ module "vpc" {
 
   enable_vpn_gateway = false
 
+  enable_flow_log                      = false
+  # LabRole doesn't allow to create the IAM permissions associated to this section
+  /*
   enable_flow_log                      = true
   create_flow_log_cloudwatch_log_group = true
   create_flow_log_cloudwatch_iam_role  = true
   flow_log_max_aggregation_interval    = 60
+  */
 
   tags = local.vpc_tags
 }

@@ -1,6 +1,6 @@
 tags = {
-  Owner       = "Javi"
+  Owner       = "Student"
   Environment = "production"
 }
 
-rds_multiaz = true
+environment = "production"

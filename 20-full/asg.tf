@@ -74,7 +74,7 @@ module "asg" {
   min_size = 1
   max_size = 3
 
-  health_check_type   = "ELB"
+  health_check_type   = "EC2"
   vpc_zone_identifier = module.vpc.private_subnets
 
   target_group_arns = [aws_lb_target_group.app_target_group.arn]
@@ -90,6 +90,7 @@ module "asg" {
     triggers = ["tag"]
   }
 
+  create_launch_template = true
   launch_template_name        = "${var.prefix}_launch_template"
   launch_template_description = "Launch template for ${var.prefix}"
   update_default_version      = true
@@ -99,8 +100,10 @@ module "asg" {
   ebs_optimized     = true
   enable_monitoring = true
 
-  create_launch_template = true
-
+  # This version of the script is designed to be run in the AWS Academy environment
+  # in which the student is not allowed to manage permissions
+  iam_instance_profile_name = "LabInstanceProfile"
+  /*
   create_iam_instance_profile = true
   iam_role_name               = "${var.prefix}AppRole"
   iam_role_path               = "/ec2/"
@@ -111,6 +114,7 @@ module "asg" {
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   }
+  */
 
   block_device_mappings = [
     {
@@ -133,10 +137,6 @@ module "asg" {
     cpu_credits = "standard"
   }
 
-  instance_market_options = {
-    market_type = "spot"
-  }
-
   network_interfaces = [
     {
       delete_on_termination = true
@@ -154,14 +154,14 @@ module "asg" {
     {
       resource_type = "volume"
       tags          = local.asg_tags
-    },
-    {
-      resource_type = "spot-instances-request"
-      tags          = local.asg_tags
     }
   ]
 
-  user_data = filebase64("${path.module}/user-data.sh")
+  user_data = base64encode(
+                replace(
+                  replace(
+                    file("user-data.sh"), "__PREFIX__", "${var.prefix}"),
+                        "__ENVIRONMENT__", "${var.environment}"))
 
   tags = local.asg_tags
 }

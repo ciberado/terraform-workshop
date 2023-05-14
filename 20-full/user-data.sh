@@ -1,6 +1,35 @@
-#!/bin/sh
+#!/bin/bash
 
-sudo apt update
-sudo apt install openjdk-8-jre-headless -y
-wget https://github.com/ciberado/pokemon/releases/download/stress/pokemon-0.0.4-SNAPSHOT.jar
-java -jar pokemon-0.0.4-SNAPSHOT.jar
+apt update
+apt install jq awscli openjdk-17-jdk -y
+
+git clone https://github.com/spring-projects/spring-petclinic
+cd spring-petclinic
+./mvnw -Dmaven.test.skip package
+
+FILE=$(ls /spring-petclinic/target/*.jar)
+
+REGION=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+
+MYSQL_ENDPOINT=$(aws ssm get-parameter \
+  --with-decryption \
+  --name "/__PREFIX__/__ENVIRONMENT__/databases/endpoint" \
+  --query Parameter.Value \
+  --output text \
+  --region $REGION)
+MYSQL_URL=jdbc:mysql://$MYSQL_ENDPOINT/petclinic
+MYSQL_USER=admin
+MYSQL_PASS=$(aws ssm get-parameter \
+  --name "/__PREFIX__/__ENVIRONMENT__/databases/password/master" \
+  --with-decryption \
+  --query Parameter.Value \
+  --output text \
+  --region $REGION)
+
+java \
+  -Dspring.profiles.active=mysql \
+  -Dserver.port=8080 \
+  -DMYSQL_USER=$MYSQL_USER \
+  -DMYSQL_URL=$MYSQL_URL \
+  -DMYSQL_PASS="$MYSQL_PASS" \
+  -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar
