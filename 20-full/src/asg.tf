@@ -69,6 +69,8 @@ resource "aws_lb_listener_rule" "app_routing" {
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
 
+  depends_on = [ module.db ]
+
   name = "${var.prefix}AppASG"
 
   min_size = 1
