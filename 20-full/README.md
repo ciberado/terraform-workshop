@@ -13,7 +13,7 @@ It is designed to facilitate learning about several Terraform features, like:
 
 ## Preparation
 
-*Note: CloudShell is not the best environment to run critical processes, and it is even worst if you don't
+*Note*: CloudShell is not the best environment to run critical processes, and it is even worst if you don't
 keep your Terraform backend secured on S3. In case you get any problem executing the commands
 
 
