@@ -14,7 +14,6 @@ resource "aws_ssm_parameter" "rdssecret" {
   description = "Initial password for the database"
   type        = "SecureString"
   value       = random_password.dbpassword.result
-  overwrite   = true
 }
 
 module "rds_mysql_sg" {
@@ -68,7 +67,6 @@ module "db" {
 
   db_name                = "petclinic"
   username               = "admin"
-  create_random_password = false
   password               = random_password.dbpassword.result
 
   port = 3306
@@ -88,5 +86,4 @@ resource "aws_ssm_parameter" "rdsendpoint" {
   description = "RDS endpoint"
   type        = "String"
   value       = module.db.db_instance_endpoint
-  overwrite   = true
 }
