@@ -105,6 +105,7 @@ module "asg" {
   # This version of the script is designed to be run in the AWS Academy environment
   # in which the student is not allowed to manage permissions
   iam_instance_profile_name = "LabInstanceProfile"
+  create_iam_instance_profile = false
   /*
   create_iam_instance_profile = true
   iam_role_name               = "${var.prefix}AppRole"
