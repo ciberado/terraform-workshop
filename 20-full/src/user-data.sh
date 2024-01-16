@@ -32,4 +32,4 @@ java \
   -DMYSQL_USER=$MYSQL_USER \
   -DMYSQL_URL=$MYSQL_URL \
   -DMYSQL_PASS="$MYSQL_PASS" \
-  -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar
+  -jar $FILE
