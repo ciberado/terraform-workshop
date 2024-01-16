@@ -76,6 +76,10 @@ module "db" {
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [module.rds_mysql_sg.security_group_id]
 
+  # WARNING
+  # ONLY FOR DEMOSTRATION PURPOSES. 
+  # This value should never be used in production.
+  skip_final_snapshot = true
 
   tags = {
     Layer : "database"
