@@ -65,9 +65,10 @@ module "db" {
   allocated_storage     = 20
   max_allocated_storage = 100
 
-  db_name                = "petclinic"
-  username               = "admin"
-  password               = random_password.dbpassword.result
+  manage_master_user_password = false
+  db_name                     = "petclinic"
+  username                    = "admin"
+  password                    = random_password.dbpassword.result
 
   port = 3306
 
