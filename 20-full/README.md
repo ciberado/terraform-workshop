@@ -85,7 +85,7 @@ tfsec --tfvars-file prod.tfvars .
 * Launch the the infrastructure. It will take around 15 minutes to set it up everything properly
 
 ```bash
-terraform apply -var-file=prod.tfvars -auto-approve
+terraform apply -var-file=prod.tfvars -var prefix=$USER -auto-approve
 ```
 
 * Get the address of the load balancer and open it with your browser
@@ -102,5 +102,5 @@ minutes to be available, as the application installation process is not optimize
 * Delete the infrastructure
 
 ```bash
-terraform apply -destroy -var-file=prod.tfvars -auto-approve
+terraform apply -destroy -var-file=prod.tfvars -var prefix=$USER -auto-approve
 ```
