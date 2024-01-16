@@ -49,7 +49,7 @@ terraform init
 
 ```bash
 terraform validate
-terraform plan -var-file prod.tfvars
+terraform plan -var-file prod.tfvars -var prefix=$USER
 ```
 
 ## Security checking: Checkov
